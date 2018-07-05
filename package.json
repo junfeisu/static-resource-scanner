@@ -1,0 +1,21 @@
+{
+  "name": "static-resource-scanner",
+  "version": "1.0.0",
+  "description": "A tool that scans static resource files in a specified project directory to generate resource tables",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "keywords": [
+    "static",
+    "resource",
+    "scan"
+  ],
+  "author": "sjffly",
+  "license": "ISC",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "commander": "^2.16.0"
+  }
+}

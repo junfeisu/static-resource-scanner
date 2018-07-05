@@ -1,0 +1,9 @@
+# MacOs store file
+.DS_Store
+
+# node_modules
+node_modules
+
+# npm or yarn debug log
+npm-debug.*
+yarn-error.*
