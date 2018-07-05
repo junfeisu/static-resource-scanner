@@ -5,14 +5,20 @@ const exec = require('child_process').exec
 
 program
   .version('0.0.1')
-  .allowUnknownOption()
-  .option('-r, --root', '设置需要扫描的项目根目录')
+  .option('-r, --relative <string>', '设置需要扫描的项目根目录的相对目录')
+  .option('-i, --ignore <string>', '设置需要忽略的目录')
 
 program
   .command('scan <dir>')
   .description('scan the whole static resource files under dir')
   .action((dir) => {
-    exec('node app.js ' + dir, {'cwd': '/home/sjffly/personal/static-resource-scanner/'}, (err, stdout, stderr) => {
+    let command = 'node app.js ' + dir
+
+    if (program.relative) {
+      command += ' ' + program.relative
+    }
+
+    exec(command, {'cwd': '/home/sjffly/personal/static-resource-scanner/'}, (err, stdout, stderr) => {
       if (err) {
         console.log('exec err is ', err)
       } else {
