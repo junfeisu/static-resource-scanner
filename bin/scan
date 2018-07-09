@@ -18,6 +18,13 @@ program
       command += ' ' + program.relative
     }
 
+    console.log('program.ignore', command)
+
+    if (program.ignore) {
+      command += ' ' + program.ignore
+      console.log(program.ignore)
+    }
+
     exec(command, {'cwd': '/home/sjffly/personal/static-resource-scanner/'}, (err, stdout, stderr) => {
       if (err) {
         console.log('exec err is ', err)
