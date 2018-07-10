@@ -1,6 +1,7 @@
 const fs = require('fs')
 const ignorePwds = []
 const staticResourceTable = {}
+const staticFileReg = /^.+(\.js|\.css|\.png|\.jpg|\.jpeg|\.svg|\.ttf|\.scss|\.less)$/i
 
 let rootPwd = process.env.PWD
 let relativePwd = rootPwd
@@ -30,9 +31,13 @@ const next = (pwd) => {
   files.forEach((file, index) => {
     const isDirectory = fs.statSync(pwd + '/' + file).isDirectory()
     if (isDirectory) {
-      next(pwd + '/' + file)
+      if (!ignorePwds.includes(file)) {
+        next(pwd + '/' + file)
+      }
     } else {
-      staticResourceTable[pwd + '/' + file] = pwd + '/' + file
+      if (staticFileReg.test(file)) {
+        staticResourceTable[pwd + '/' + file] = pwd + '/' + file
+      }
       if (pwd === relativePwd && index === files.length - 1) {
         fs.open(`${rootPwd}` + '/staticResource.json', 'w+', null, (e, fd) => {
           if (e) {
