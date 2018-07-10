@@ -6,26 +6,23 @@ const exec = require('child_process').exec
 program
   .version('0.0.1')
   .option('-r, --relative <string>', '设置需要扫描的项目根目录的相对目录')
-  .option('-i, --ignore <string>', '设置需要忽略的目录')
+  .option('-i, --ignore <string>', '设置需要忽略的目录,如果设置了--relative,那么路径相对于--relative,否则相对于项目根目录')
 
 program
   .command('scan <dir>')
   .description('scan the whole static resource files under dir')
   .action((dir) => {
-    let command = 'node app.js ' + dir
+    let command = 'node app.js '
 
     if (program.relative) {
-      command += ' ' + program.relative
+      command += '-r ' + program.relative + ' '
     }
-
-    console.log('program.ignore', command)
 
     if (program.ignore) {
-      command += ' ' + program.ignore
-      console.log(program.ignore)
+      command += '-i ' + program.ignore + ' '
     }
 
-    exec(command, {'cwd': '/home/sjffly/personal/static-resource-scanner/'}, (err, stdout, stderr) => {
+    exec(command, {'cwd': dir}, (err, stdout, stderr) => {
       if (err) {
         console.log('exec err is ', err)
       } else {

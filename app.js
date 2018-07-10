@@ -1,7 +1,28 @@
 const fs = require('fs')
-
-const initialPwd = process.argv[2]
+const ignorePwds = []
 const staticResourceTable = {}
+
+let rootPwd = process.env.PWD
+let relativePwd = rootPwd
+
+const parseArgs = (args) => {
+  if (args.length === 1) {
+    return
+  }
+
+  for (let i = 1; i < process.argv.length; i++) {
+    if (process.argv[i] === '-r') {
+      relativePwd = process.argv[i + 1]
+      i++
+    } else if (process.argv[i] === '-i') {
+      let ignores = process.argv.splice(i + 1)
+      ignores.map(ignorePwd => {
+        ignorePwds.push(ignorePwd)
+      })
+      break
+    }
+  }
+}
 
 const next = (pwd) => {
   const files = fs.readdirSync(pwd)
@@ -12,8 +33,8 @@ const next = (pwd) => {
       next(pwd + '/' + file)
     } else {
       staticResourceTable[pwd + '/' + file] = pwd + '/' + file
-      if (pwd === initialPwd && index === files.length - 1) {
-        fs.open(`${initialPwd}` + '/staticResource.json', 'w+', null, (e, fd) => {
+      if (pwd === relativePwd && index === files.length - 1) {
+        fs.open(`${rootPwd}` + '/staticResource.json', 'w+', null, (e, fd) => {
           if (e) {
             console.log('create json file err', e)
             return
@@ -28,4 +49,5 @@ const next = (pwd) => {
   })
 }
 
-next(initialPwd)
+parseArgs(process.argv)
+next(relativePwd)

@@ -7,3 +7,6 @@ node_modules
 # npm or yarn debug log
 npm-debug.*
 yarn-error.*
+
+# static-resource.json
+staticResource.json
