@@ -12,17 +12,21 @@ program
   .command('scan <dir>')
   .description('scan the whole static resource files under dir')
   .action((dir) => {
-    let command = 'node app.js '
+    let command = 'node app.js ' + '-p ' + dir + ' '
 
     if (program.relative) {
-      command += '-r ' + program.relative + ' '
+      if (program.relative[program.relative.length -1] !== '/') {
+        command += '-r ' + program.relative + '/ '
+      } else {
+        command += '-r ' + program.relative + ' '
+      }
     }
 
     if (program.ignore) {
       command += '-i ' + program.ignore + ' '
     }
 
-    exec(command, {'cwd': dir}, (err, stdout, stderr) => {
+    exec(command.trim(), {'cwd': '/home/sjffly/personal/static-resource-scanner/'}, (err, stdout, stderr) => {
       if (err) {
         console.log('exec err is ', err)
       } else {

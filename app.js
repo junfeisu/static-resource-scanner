@@ -3,20 +3,23 @@ const ignorePwds = []
 const staticResourceTable = {}
 const staticFileReg = /^.+(\.js|\.css|\.png|\.jpg|\.jpeg|\.svg|\.ttf|\.scss|\.less)$/i
 
-let rootPwd = process.env.PWD
+let rootPwd = process.argv[3]
+if (rootPwd[rootPwd.length - 1] !== '/') {
+  rootPwd = rootPwd + '/'
+}
 let relativePwd = rootPwd
 
 const parseArgs = (args) => {
-  if (args.length === 1) {
+  if (args.length === 4) {
     return
   }
 
-  for (let i = 1; i < process.argv.length; i++) {
-    if (process.argv[i] === '-r') {
-      relativePwd = process.argv[i + 1]
+  for (let i = 4; i < args.length; i++) {
+    if (args[i] === '-r') {
+      relativePwd = rootPwd + args[i + 1]
       i++
-    } else if (process.argv[i] === '-i') {
-      let ignores = process.argv.splice(i + 1)
+    } else if (args[i] === '-i') {
+      let ignores = args.splice(i + 1)
       ignores.map(ignorePwd => {
         ignorePwds.push(ignorePwd)
       })
@@ -32,11 +35,18 @@ const next = (pwd) => {
     const isDirectory = fs.statSync(pwd + '/' + file).isDirectory()
     if (isDirectory) {
       if (!ignorePwds.includes(file)) {
-        next(pwd + '/' + file)
+        if (pwd[pwd.length - 1] !== '/') {
+          pwd += '/'
+        }
+        next(pwd + file + '/')
       }
     } else {
       if (staticFileReg.test(file)) {
-        staticResourceTable[pwd + '/' + file] = pwd + '/' + file
+        if (pwd === rootPwd) {
+          staticResourceTable[file] = '/' + file
+        } else {
+          staticResourceTable[pwd.replace(rootPwd, '') + file] = pwd.replace(rootPwd, '/') + file
+        }
       }
       if (pwd === relativePwd && index === files.length - 1) {
         fs.open(`${rootPwd}` + '/staticResource.json', 'w+', null, (e, fd) => {
