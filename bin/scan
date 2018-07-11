@@ -17,11 +17,7 @@ program
     let command = 'node app.js ' + '-p ' + path.resolve(process.env.PWD, dir) + ' '
 
     if (program.relative) {
-      if (program.relative[program.relative.length -1] !== '/') {
-        command += '-r ' + program.relative + '/ '
-      } else {
-        command += '-r ' + program.relative + ' '
-      }
+      command += '-r ' + program.relative + ' '
     }
 
     if (program.ignore) {
