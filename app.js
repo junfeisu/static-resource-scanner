@@ -25,6 +25,7 @@ const parseArgs = (args) => {
   }
 }
 
+// 递归遍历指定目录
 const next = (pwd) => {
   const files = fs.readdirSync(pwd)
 
@@ -37,9 +38,9 @@ const next = (pwd) => {
     } else {
       if (staticFileReg.test(file)) {
         if (path.resolve(pwd) === path.resolve(rootPwd)) {
-          staticResourceTable[file] = '/' + file
+          staticResourceTable[file] = file
         } else {
-          staticResourceTable[path.join(pwd.replace(rootPwd, ''), file)] = path.join(pwd.replace(rootPwd, '/'), file)
+          staticResourceTable[path.join(pwd.replace(rootPwd, ''), file)] = path.join(pwd.replace(rootPwd, ''), file)
         }
       }
       if (pwd === relativePwd && index === files.length - 1) {
