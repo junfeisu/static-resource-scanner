@@ -43,19 +43,23 @@ const next = (pwd) => {
         }
       }
       if (pwd === relativePwd && index === files.length - 1) {
-        let fileName = specifiedName ? specifiedName + '.json' : 'staticResource.json' 
-        fs.open(path.resolve(rootPwd, fileName), 'w+', null, (e, fd) => {
-          if (e) {
-            console.log('create json file err', e)
-            return
-          }
-          fs.write(fd, JSON.stringify(staticResourceTable), (error) => {
-            error ? console.log('write err', error) : console.log('add json success')
-            fs.closeSync(fd)
-          })
-        })
+        generateJosnFile()
       }
     }
+  })
+}
+
+const generateJosnFile = () => {
+  let fileName = specifiedName ? specifiedName + '.json' : 'staticResource.json' 
+  fs.open(path.resolve(rootPwd, fileName), 'w+', null, (e, fd) => {
+    if (e) {
+      console.log('create json file err', e)
+      return
+    }
+    fs.write(fd, JSON.stringify(staticResourceTable), (error) => {
+      error ? console.log('write err', error) : console.log('add json success')
+      fs.closeSync(fd)
+    })
   })
 }
 
