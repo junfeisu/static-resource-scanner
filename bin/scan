@@ -2,6 +2,7 @@
 
 const program = require('commander')
 const exec = require('child_process').exec
+const path = require('path')
 
 program
   .version('0.0.1')
@@ -13,7 +14,7 @@ program
   .command('scan <dir>')
   .description('scan the whole static resource files under dir')
   .action((dir) => {
-    let command = 'node app.js ' + '-p ' + dir + ' '
+    let command = 'node app.js ' + '-p ' + path.resolve(process.env.PWD, dir) + ' '
 
     if (program.relative) {
       if (program.relative[program.relative.length -1] !== '/') {
