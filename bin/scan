@@ -6,7 +6,8 @@ const exec = require('child_process').exec
 program
   .version('0.0.1')
   .option('-r, --relative <string>', '设置需要扫描的项目根目录的相对目录')
-  .option('-i, --ignore <string>', '设置需要忽略的目录,如果设置了--relative,那么路径相对于--relative,否则相对于项目根目录')
+  .option('-i, --ignore <string>', '设置需要忽略的目录，如果设置了--relative，那么路径相对于--relative，否则相对于项目根目录')
+  .option('-n, --json-name <string>', '设置生成的json文件名，默认为staticResource.json')
 
 program
   .command('scan <dir>')
@@ -24,6 +25,10 @@ program
 
     if (program.ignore) {
       command += '-i ' + program.ignore + ' '
+    }
+
+    if (program.jsonName) {
+      command += '-n ' + program.jsonName + ' '
     }
 
     exec(command.trim(), {'cwd': '/home/sjffly/personal/static-resource-scanner/'}, (err, stdout, stderr) => {

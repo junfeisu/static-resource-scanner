@@ -8,6 +8,7 @@ if (rootPwd[rootPwd.length - 1] !== '/') {
   rootPwd = rootPwd + '/'
 }
 let relativePwd = rootPwd
+let specifiedName = ''
 
 const parseArgs = (args) => {
   if (args.length === 4) {
@@ -16,14 +17,11 @@ const parseArgs = (args) => {
 
   for (let i = 4; i < args.length; i++) {
     if (args[i] === '-r') {
-      relativePwd = rootPwd + args[i + 1]
-      i++
+      relativePwd = rootPwd + args[++i]
     } else if (args[i] === '-i') {
-      let ignores = args.splice(i + 1)
-      ignores.map(ignorePwd => {
-        ignorePwds.push(ignorePwd)
-      })
-      break
+      ignorePwds.push(args[++i])
+    } else if (args[i] === '-n') {
+      specifiedName = args[++i]
     }
   }
 }
@@ -49,7 +47,8 @@ const next = (pwd) => {
         }
       }
       if (pwd === relativePwd && index === files.length - 1) {
-        fs.open(`${rootPwd}` + '/staticResource.json', 'w+', null, (e, fd) => {
+        let fileName = specifiedName ? specifiedName + '.json' : 'staticResource.json' 
+        fs.open(`${rootPwd}` + fileName, 'w+', null, (e, fd) => {
           if (e) {
             console.log('create json file err', e)
             return
